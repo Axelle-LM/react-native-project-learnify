@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import FlashcardApp from "@/components/Flashcard";
 
 export default function Index() {
   return (
@@ -10,7 +11,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <FlashcardApp />
     </View>
   );
 }
