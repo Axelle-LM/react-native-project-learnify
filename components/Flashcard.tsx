@@ -34,6 +34,10 @@ const FlashcardApp = () => {
         setAnswer('');
     };
 
+    const editFlashcard = (id: string) => {
+
+    }
+
     const deleteFlashcard = (id: string) => {
         setFlashcards((prev) => prev.filter(card => card.id !== id));
     };
