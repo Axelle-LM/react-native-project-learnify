@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 
 type FlashcardProps = {
     id: string,
@@ -7,20 +7,14 @@ type FlashcardProps = {
     answer: string,
 };
 
-const Flashcard = ({ question, answer, onDelete }: FlashcardProps & { onDelete: () => void }) => {
-    return (
-        <View style={styles.card}>
-            <Text style={styles.question}>Question : {question}</Text>
-            <Text style={styles.answer}>Réponse : {answer}</Text>
-            <Button title="Supprimer" onPress={onDelete} color="#ff4d4d" />
-        </View>
-    );
-};
-
 const FlashcardApp = () => {
     const [flashcards, setFlashcards] = useState<FlashcardProps[]>([]);
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
+
+    const [editCardId, setEditCardId] = useState<string | null>(null);
+    const [editQuestion, setEditQuestion] = useState('');
+    const [editAnswer, setEditAnswer] = useState('');
 
     const addFlashcard = () => {
         if (!question || !answer) return;
@@ -34,30 +28,65 @@ const FlashcardApp = () => {
         setAnswer('');
     };
 
-    const editFlashcard = (id: string) => {
-
-    }
-
     const deleteFlashcard = (id: string) => {
         setFlashcards((prev) => prev.filter(card => card.id !== id));
+    };
+
+    const editCard = (card: FlashcardProps) => { //va chercher les valeurs de ma carte sélectionné
+        setEditCardId(card.id);
+        setEditQuestion(card.question);
+        setEditAnswer(card.answer);
+    };
+
+    const saveEdit = (id: string) => { //mets à jour mes valeurs
+        setFlashcards((prev) =>
+            prev.map(card =>
+                card.id === id ? { ...card, question: editQuestion, answer: editAnswer } : card
+            )
+        );
+        setEditCardId(null);
+        setEditQuestion('');
+        setEditAnswer('');
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Ajouter une carte</Text>
-            <TextInput style={styles.input} placeholder="Question" value={question} onChangeText={setQuestion}
-            />
-            <TextInput style={styles.input} placeholder="Réponse" value={answer} onChangeText={setAnswer}
-            />
+            <TextInput style={styles.input} placeholder="Question" value={question} onChangeText={setQuestion} />
+            <TextInput style={styles.input} placeholder="Réponse" value={answer} onChangeText={setAnswer} />
             <Button title="Ajouter" onPress={addFlashcard} />
 
             <Text style={styles.cardlist}>Vos cartes</Text>
 
-            <FlatList data={flashcards} keyExtractor={(item) => item.id} renderItem={({ item }) => (
-                <Flashcard question={item.question} answer={item.answer} id={item.id}
-                    onDelete={() => deleteFlashcard(item.id)}
-                />
-            )}
+            <FlatList
+                data={flashcards}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <View style={styles.card}>
+                        {editCardId === item.id ? (
+                            <View>
+                                <TextInput
+                                    style={styles.input}
+                                    value={editQuestion}
+                                    onChangeText={setEditQuestion}
+                                />
+                                <TextInput
+                                    style={styles.input}
+                                    value={editAnswer}
+                                    onChangeText={setEditAnswer}
+                                />
+                                <Button title="Enregistrer" onPress={() => saveEdit(item.id)} color="green" />
+                            </View>
+                        ) : (
+                            <View>
+                                <Text style={styles.question}>Question : {item.question}</Text>
+                                <Text style={styles.answer}>Réponse : {item.answer}</Text>
+                                <Button title="Supprimer" onPress={() => deleteFlashcard(item.id)} color="#ff4d4d" />
+                                <Button title="Modifier" onPress={() => editCard(item)} color="green" />
+                            </View>
+                        )}
+                    </View>
+                )}
             />
         </View>
     );
@@ -66,6 +95,7 @@ const FlashcardApp = () => {
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,
+        padding: 10,
     },
     title: {
         fontSize: 22,
