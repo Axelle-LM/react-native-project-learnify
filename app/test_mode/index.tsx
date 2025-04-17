@@ -1,17 +1,23 @@
 import SurveyViewApp from "@/components/SurveyView";
+import { FlashcardProvider } from "@/context/FlashcardContext";
 import React from "react";
-import { Text, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function TestModeView() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <FlashcardProvider>
+    <ScrollView contentContainerStyle={styles.container}>
       <SurveyViewApp/>
-    </View>
+    </ScrollView>
+  </FlashcardProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 60,
+    backgroundColor: "#fff",
+  },
+});
