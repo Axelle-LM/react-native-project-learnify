@@ -3,15 +3,23 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { FlashcardProvider } from "@/context/FlashcardContext";
 import FlashcardForm from "@/components/FlashcardForm";
 import FlashcardList from "@/components/FlashcardList";
+import { DeckProvider } from "@/context/DeckContext";
+import DeckCreate from "@/components/DeckCreate";
+import DeckList from "@/components/DeckList";
 
 export default function Index() {
   return (
+    <DeckProvider>
+      <DeckCreate />
+      <DeckList />
+    </DeckProvider>
+    /*
     <FlashcardProvider>
       <ScrollView contentContainerStyle={styles.container}>
         <FlashcardForm />
         <FlashcardList />
       </ScrollView>
-    </FlashcardProvider>
+    </FlashcardProvider>*/
   );
 }
 
