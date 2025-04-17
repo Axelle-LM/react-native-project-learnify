@@ -66,17 +66,17 @@ const SwipeViewApp = () => {
     // };
 
     return (
-            <ScrollView decelerationRate="fast" horizontal>
-                $<FlatList data={flashcards} renderItem={({ item }) => (
-                    <View>
+        <>
+            $<FlatList data={flashcards} renderItem={({ item }) => (
+                    <View style={styles.card}>
                         <Text style={styles.question}>Question : {item.question}</Text>
                         <Text style={styles.answer}>Réponse : {item.answer}</Text>
                         <Button title="Connu" onPress={() => addInMindCard(item)} color="green" />
-                        <Button title="A revoir" onPress={() => addSeeAgainCard(item)} color="red" />
+                        <Button title="A revoir" onPress={() => addSeeAgainCard(item)} color="#ff4d4d" />
                     </View>
                 )}
             />
-            </ScrollView>
+        </>
     );
 };
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
         textAlign: 'center',
-    },
+    }
 });
 
 export default SwipeViewApp;
