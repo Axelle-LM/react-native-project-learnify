@@ -1,17 +1,25 @@
 import React from "react";
-import { Text, View } from "react-native";
-import FlashcardApp from "@/components/Flashcard";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { FlashcardProvider } from "@/context/FlashcardContext";
+import FlashcardForm from "@/components/FlashcardForm";
+import FlashcardList from "@/components/FlashcardList";
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <FlashcardApp />
-    </View>
+    <FlashcardProvider>
+      <ScrollView contentContainerStyle={styles.container}>
+        <FlashcardForm />
+        <FlashcardList />
+      </ScrollView>
+    </FlashcardProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 60,
+    backgroundColor: "#fff",
+  },
+});
