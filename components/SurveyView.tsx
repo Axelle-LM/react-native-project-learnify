@@ -148,7 +148,7 @@ const SurveyViewApp = () => {
     }, [])
 
     return (
-        <ScrollView style={styles.container}>
+        <>
             $<FlatList data={surveyContent} renderItem={({ item }) => (
                 <SurveyCard question={item.question} answers={item.answers} id={item.id}
                 allSelectedAnswers={selectedAnswers}
@@ -158,7 +158,7 @@ const SurveyViewApp = () => {
             />
             <Button title="Envoyer" onPress={() => getStats(surveyContent, selectedAnswers)} color="#ff4d4d" />
             <SurveyStatsView wrongAnswersCount={wrongAnswers.length} rightAnswersCount={rightAnswers.length}/>
-        </ScrollView>
+        </>
     );
 };
 
