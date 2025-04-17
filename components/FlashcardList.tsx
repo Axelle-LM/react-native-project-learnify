@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, Text, StyleSheet } from 'react-native';
 import { useFlashcards } from '../context/FlashcardContext';
 import FlashcardItem from './FlashcardCard';
+import FlashcardCard from './FlashcardCard';
 
 const FlashcardList = () => {
     const { flashcards } = useFlashcards();
@@ -12,7 +13,7 @@ const FlashcardList = () => {
             <FlatList
                 data={flashcards}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <FlashcardItem card={item} />}
+                renderItem={({ item }) => <FlashcardCard card={item} />}
             />
         </>
     );
