@@ -1,3 +1,4 @@
+import { Link, router } from "expo-router";
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FlashcardProvider } from "@/context/FlashcardContext";
