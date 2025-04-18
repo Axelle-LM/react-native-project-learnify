@@ -1,4 +1,8 @@
+
 import React, { useEffect } from "react";
+
+import { Link, router } from "expo-router";
+
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FlashcardProvider } from "@/context/FlashcardContext";
 import FlashcardForm from "@/components/FlashcardForm";
