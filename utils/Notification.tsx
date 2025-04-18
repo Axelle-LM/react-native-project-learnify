@@ -73,8 +73,8 @@ export async function scheduleRepeatingNotification() {
             data: { repeat: true },
         },
         trigger: {
-            type: 'timeInterval',
-            seconds: 30,
+            hour: 10,
+            minute: 0,
             repeats: true,
         } as any,
     });
