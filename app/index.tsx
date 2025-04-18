@@ -11,16 +11,15 @@ import DeckList from "@/components/DeckList";
 export default function Index() {
   return (
     <DeckProvider>
-      <DeckCreate />
-      <DeckList />
+      <FlashcardProvider>
+        <ScrollView contentContainerStyle={styles.container}>
+          <DeckCreate />
+          <DeckList />
+          <FlashcardForm />
+          <FlashcardList />
+        </ScrollView>
+      </FlashcardProvider>
     </DeckProvider>
-    /*
-    <FlashcardProvider>
-      <ScrollView contentContainerStyle={styles.container}>
-        <FlashcardForm />
-        <FlashcardList />
-      </ScrollView>
-    </FlashcardProvider>*/
   );
 }
 
