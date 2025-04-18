@@ -21,32 +21,51 @@ type SurveyCardProps = {
 };
 
 type SurveyStats = {
+    questionTotal: number,
     rightAnswersCount: number,
-    wrongAnswersCount: number
+    wrongAnswersCount: number,
+    rightAnswersPercent: number,
+    wrongAnswersPercent: number
 };
 
-const SurveyCard = ({ question, answers, id, allSelectedAnswers, answerSelection }: SurveyCardProps & { allSelectedAnswers: SurveyAnswer[] } & { answerSelection: (answer: number) => void }) => {
+const SurveyCard = ({ 
+    question, 
+    answers, 
+    id, 
+    answerSelection 
+}: SurveyCardProps & { 
+    answerSelection: (answer: SurveyAnswer) => void 
+}) => {
     return (
-        <View style={styles.card} key={id} >
+        <View style={styles.card} key={id}>
             <Text style={styles.question}>{question}</Text>
             <Text style={styles.answer}>Réponses :</Text>
-            {answers.map((answer) => {
-                return(
-                    <>
-                        <View style={styles.answserContainer}>
-                            <Button title='I choose this answer' onPress={() => answerSelection(allSelectedAnswers.push(answer))} color="orange"/>
-                            <Text style={styles.answer}>{answer.title}</Text>
-                        </View>
-                    </>
-                )
-            } )}
+            <FlatList 
+                data={answers} 
+                renderItem={({ item }) => (
+                    <View style={styles.answserContainer}>
+                        <Text style={styles.answer}>{item.title}</Text>
+                        <Button 
+                            title="I choose this answer" 
+                            onPress={() => answerSelection(item)} 
+                            color="orange" 
+                        />
+                    </View>
+                )}
+            />
         </View>
     );
 };
 
-const SurveyStatsView = ({ rightAnswersCount, wrongAnswersCount }: SurveyStats) => {
+const SurveyStatsView = ({ questionTotal, rightAnswersCount, wrongAnswersCount, rightAnswersPercent, wrongAnswersPercent }: SurveyStats) => {
     return (
         <><View style={styles.answsersCountCard}>
+            <View style={styles.card}>
+                <Text style={styles.question}>Score du test</Text>
+                <Text style={styles.rightAnswsersCount}>{rightAnswersCount}/{questionTotal}</Text>
+            </View>
+        </View>
+        <View style={styles.answsersCountCard}>
             <View style={styles.card}>
                 <Text style={styles.question}>Nombres de bonnes réponses</Text>
                 <Text style={styles.rightAnswsersCount}>{rightAnswersCount}</Text>
@@ -56,6 +75,18 @@ const SurveyStatsView = ({ rightAnswersCount, wrongAnswersCount }: SurveyStats) 
             <View style={styles.card}>
                 <Text style={styles.question}>Nombres de mauvaises réponses</Text>
                 <Text style={styles.rightAnswsersCount}>{wrongAnswersCount}</Text>
+            </View>
+        </View>
+        <View style={styles.answsersCountCard}>
+            <View style={styles.card}>
+                <Text style={styles.question}>Pourcentage de bonnes réponses</Text>
+                <Text style={styles.rightAnswsersCount}>{rightAnswersPercent}%</Text>
+            </View>
+        </View>
+        <View style={styles.answsersCountCard}>
+            <View style={styles.card}>
+                <Text style={styles.question}>Pourcentage de mauvaises réponses</Text>
+                <Text style={styles.rightAnswsersCount}>{wrongAnswersPercent}%</Text>
             </View>
         </View></>
     );
@@ -89,75 +120,89 @@ const SurveyViewApp = () => {
     const [rightAnswers, setRightAnswers] = useState<SurveyAnswer[]>([])
     const [wrongAnswers, setWrongAnswers] = useState<SurveyAnswer[]>([])
 
+    function generateRandomString(length: number) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let randomString = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            randomString += characters[randomIndex];
+        }
+        return randomString;
+    }
+
     const getFlashCards = () => {
-        setFlashcards([question1, question2, question3])
+        setFlashcards([question1, question2, question3]);
         if (!flashcards) return;
-        const currentFlashCards: SurveyCardProps[] = flashcards.map((flashcard: FlashcardProps) => {
-            return {
-                id: flashcard.id, 
-                question: flashcard.question,
-                answers: [
-                {
-                    value: 1,
-                    title: flashcard.answer,
-                    wrong: false,
-                    right: true
-                },
-                {
-                    value: 2,
-                    title: "Wrong answer 2",
-                    wrong: true,
-                    right: false
-                },
-                {
-                    value: 3,
-                    title: "Wrong answer 3",
-                    wrong: true,
-                    right: false
-                },
-                ]
-            }
-        });
-        setSurveyContent(currentFlashCards)
+        const currentFlashCards: SurveyCardProps[] = flashcards.map((flashcard: FlashcardProps) => ({
+            id: flashcard.id,
+            question: flashcard.question,
+            answers: [
+                { value: 1, title: flashcard.answer, wrong: false, right: true },
+                { value: 2, title: generateRandomString(5), wrong: true, right: false },
+                { value: 3, title: generateRandomString(5), wrong: true, right: false },
+            ],
+        }));
+        setSurveyContent(currentFlashCards);
     };
 
-    const getStats = (surveyContent: SurveyCardProps[], selectedAnswers: SurveyAnswer[]) => {
-        for (let i = 0; i < surveyContent.length; i++) {
+    const selectAnswer = (answer: SurveyAnswer) => {
+        if (!answer) return;
+        setSelectedAnswers((prev) => [answer, ...prev])
+    };
 
-            for (let j = 0; j < surveyContent[i].answers.length; j++) {
+    const getStats = (selectedAnswers: SurveyAnswer[]) => {
 
-                const answers = surveyContent[i].answers
+        surveyContent.forEach((allAnswers) => {
 
-                for (let k = 0; k < selectedAnswers.length; k++) {
-
-                    if(answers[j].right === true && selectedAnswers[k].value === answers[j].value) {
-                        setRightAnswers((prev) => [selectedAnswers[k], ...prev])
-                    } else if (answers[j].wrong === true && selectedAnswers[k].value === answers[j].value){
-                        setWrongAnswers((prev) => [selectedAnswers[k], ...prev])
-                    }
-
+            for (let i = 0; i < selectedAnswers.length; i++) {
+                
+                const matchedAnswer = allAnswers.answers.find(
+                    (answer) => answer.title === selectedAnswers[i].title
+                );
+    
+                if (matchedAnswer?.right) {
+                    setRightAnswers((prev) => [selectedAnswers[i], ...prev]);
+                } else if (matchedAnswer?.wrong) {
+                    setWrongAnswers((prev) => [selectedAnswers[i], ...prev]);
                 }
 
             }
 
-        }
-    }
+            // Mise à jour des pourcentages
+        const totalQuestions = surveyContent.length
+        const rightPercent = (rightAnswers.length / totalQuestions) * 100
+        const wrongPercent = (wrongAnswers.length / totalQuestions) * 100
 
+        setRightAnswersPercent(rightPercent);
+        setWrongAnswersPercent(wrongPercent);
+
+        });
+        
+    };
+
+    console.log("Réponses sélectionnés", selectedAnswers)
+    console.log(`Nombres de bonnes réponses: ${rightAnswers.length}`)
+    console.log(`Tableau des bonnes réponses: ${rightAnswers}`)
+    console.log(`Nombres de mauvaises réponses: ${wrongAnswers.length}`)
+    console.log(`Tableau des mauvaises réponses: ${wrongAnswers}`)
+    
     useEffect(() => {
         getFlashCards()
     }, [])
 
+    console.log("Pourcentage bonnes réponses :", `${rightAnswersPercent}%`)
+    console.log("Pourcentage mauvaises réponses :", `${wrongAnswersPercent}%`)
+
     return (
         <>
-            $<FlatList data={surveyContent} renderItem={({ item }) => (
+            $<FlatList style={{flexDirection: "row"}} data={surveyContent} renderItem={({ item }) => (
                 <SurveyCard question={item.question} answers={item.answers} id={item.id}
-                allSelectedAnswers={selectedAnswers}
-                answerSelection={() => setSelectedAnswers}
+                answerSelection={selectAnswer}
                 />
             )}
             />
-            <Button title="Envoyer" onPress={() => getStats(surveyContent, selectedAnswers)} color="#ff4d4d" />
-            <SurveyStatsView wrongAnswersCount={wrongAnswers.length} rightAnswersCount={rightAnswers.length}/>
+            <Button title="Envoyer" onPress={() => getStats(selectedAnswers)} color="#ff4d4d" />
+            <SurveyStatsView questionTotal={surveyContent.length} wrongAnswersCount={wrongAnswers.length} wrongAnswersPercent={wrongAnswersPercent} rightAnswersCount={rightAnswers.length} rightAnswersPercent={rightAnswersPercent}/>
         </>
     );
 };
@@ -171,6 +216,7 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 8,
         borderRadius: 8,
+        overflow: "hidden",
     },
     question: {
         fontSize: 16,
