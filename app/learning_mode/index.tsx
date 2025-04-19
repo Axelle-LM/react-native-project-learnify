@@ -7,7 +7,7 @@ export default function LearningModeView() {
   return (
     <FlashcardProvider>
       <ScrollView contentContainerStyle={styles.container} decelerationRate="fast" horizontal>
-      <SwipeView/>
+        <SwipeView />
       </ScrollView>
     </FlashcardProvider>
   );
