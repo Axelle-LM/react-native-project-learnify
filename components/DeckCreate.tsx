@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useFlashcards } from '../context/FlashcardContext';
 import { useDecks } from '@/context/DeckContext';
 
@@ -15,25 +15,61 @@ const DeckCreate = () => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Créer un nouveau deck</Text>
             <TextInput
                 placeholder="Nom du deck"
+                placeholderTextColor="#666"
                 value={title}
                 onChangeText={setTitle}
                 style={styles.input}
             />
-            <Button title="Créer le deck" onPress={handleAdd} />
+            <TouchableOpacity style={styles.button} onPress={handleAdd}>
+                <Text style={styles.buttonText}>Créer le deck</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { marginBottom: 20 },
+    container: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#333',
+    },
     input: {
         borderWidth: 1,
-        borderColor: '#aaa',
-        padding: 8,
-        borderRadius: 5,
-        marginBottom: 10,
+        borderColor: '#ddd',
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 15,
+        fontSize: 16,
+        backgroundColor: '#f8f8f8',
+    },
+    button: {
+        backgroundColor: '#4CAF50',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

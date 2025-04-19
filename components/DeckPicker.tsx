@@ -15,7 +15,7 @@ const DeckPicker = ({ visible, onClose, onSelect }: Props) => {
         <Modal visible={visible} animationType="slide" transparent>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    <Text>Sélectionne un deck</Text>
+                    <Text style={styles.modalTitle}>Sélectionner un deck</Text>
                     <FlatList
                         data={decks}
                         keyExtractor={item => item.id}
@@ -27,12 +27,13 @@ const DeckPicker = ({ visible, onClose, onSelect }: Props) => {
                                     onClose();
                                 }}
                             >
-                                <Text>{item.title}</Text>
+                                <Text style={styles.deckItemText}>{item.title}</Text>
                             </TouchableOpacity>
                         )}
+                        style={styles.list}
                     />
-                    <TouchableOpacity onPress={onClose}>
-                        <Text style={styles.closeButton}>Fermer</Text>
+                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                        <Text style={styles.closeButtonText}>Fermer</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -50,20 +51,51 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: 'white',
         padding: 20,
-        borderRadius: 10,
-        width: '80%',
+        borderRadius: 15,
+        width: '85%',
         maxHeight: '70%',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    list: {
+        marginBottom: 15,
     },
     deckItem: {
-        paddingVertical: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderBottomColor: '#eee',
+        backgroundColor: '#f8f8f8',
+        marginVertical: 4,
+        borderRadius: 8,
+    },
+    deckItemText: {
+        fontSize: 16,
+        color: '#333',
     },
     closeButton: {
-        color: 'red',
-        textAlign: 'center',
-        marginTop: 15,
+        backgroundColor: '#ff4d4d',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    closeButtonText: {
+        color: 'white',
         fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

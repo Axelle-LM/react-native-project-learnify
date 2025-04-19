@@ -11,20 +11,23 @@ const DeckOfCard = ({ deck }: { deck: DeckProps }) => {
     const deckCards = flashcards.filter(card => deck.cardsId.includes(card.id));
 
     return (
-        <View>
-            <TouchableOpacity onPress={() => setShowCards(!showCards)}>
-                <Text>{deck.title}</Text>
+        <View style={styles.container}>
+            <TouchableOpacity
+                style={styles.deckButton}
+                onPress={() => setShowCards(!showCards)}
+            >
+                <Text style={styles.deckTitle}>{deck.title}</Text>
             </TouchableOpacity>
 
             {showCards && (
-                <View>
+                <View style={styles.cardsContainer}>
                     {deckCards.length === 0 ? (
-                        <Text>Aucune carte dans ce deck.</Text>
+                        <Text style={styles.emptyText}>Aucune carte dans ce deck.</Text>
                     ) : (
                         deckCards.map(card => (
-                            <View key={card.id}>
-                                <Text>Q: {card.question}</Text>
-                                <Text>R: {card.answer}</Text>
+                            <View key={card.id} style={styles.cardItem}>
+                                <Text style={styles.cardQuestion}>Q: {card.question}</Text>
+                                <Text style={styles.cardAnswer}>R: {card.answer}</Text>
                             </View>
                         ))
                     )}
@@ -34,5 +37,45 @@ const DeckOfCard = ({ deck }: { deck: DeckProps }) => {
     );
 };
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    deckButton: {
+        width: '100%',
+        padding: 10,
+        alignItems: 'center',
+    },
+    deckTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#333',
+    },
+    cardsContainer: {
+        width: '100%',
+        marginTop: 8,
+    },
+    cardItem: {
+        padding: 8,
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
+    },
+    cardQuestion: {
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    cardAnswer: {
+        fontSize: 14,
+        color: '#666',
+        marginTop: 2,
+    },
+    emptyText: {
+        textAlign: 'center',
+        color: '#666',
+        fontStyle: 'italic',
+    },
+});
 
 export default DeckOfCard;
