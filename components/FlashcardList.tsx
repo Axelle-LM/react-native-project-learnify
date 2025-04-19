@@ -1,29 +1,46 @@
 import React from 'react';
-import { FlatList, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useFlashcards } from '../context/FlashcardContext';
-import FlashcardItem from './FlashcardCard';
 import FlashcardCard from './FlashcardCard';
 
 const FlashcardList = () => {
     const { flashcards } = useFlashcards();
 
     return (
-        <>
-            <Text style={styles.cardlist}>Vos cartes</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Vos cartes</Text>
             <FlatList
                 data={flashcards}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <FlashcardCard card={item} />}
+                renderItem={({ item }) => (
+                    <View style={styles.cardContainer}>
+                        <FlashcardCard card={item} />
+                    </View>
+                )}
+                contentContainerStyle={styles.listContainer}
+                showsVerticalScrollIndicator={false}
             />
-        </>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    cardlist: {
-        marginTop: 40,
-        fontSize: 22,
+    container: {
+        flex: 1,
+        padding: 10,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 15,
         textAlign: 'center',
+    },
+    listContainer: {
+        padding: 5,
+    },
+    cardContainer: {
+        marginBottom: 10,
     },
 });
 
