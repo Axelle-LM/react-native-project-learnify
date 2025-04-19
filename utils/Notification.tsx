@@ -3,7 +3,10 @@ import { Text, View, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
+
+//https://docs.expo.dev/versions/latest/sdk/notifications/
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -16,16 +19,12 @@ Notifications.setNotificationHandler({
 export default function App() {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
-    const [notification, setNotification] = useState<Notifications.Notification | undefined>(
-        undefined
-    );
+    const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
     const notificationListener = useRef<Notifications.EventSubscription>();
     const responseListener = useRef<Notifications.EventSubscription>();
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
-
-        scheduleRepeatingNotification();
 
         if (Platform.OS === 'android') {
             Notifications.getNotificationChannelsAsync().then(value => setChannels(value ?? []));
@@ -61,23 +60,34 @@ export default function App() {
     );
 }
 
-
-export async function scheduleRepeatingNotification() {
+export async function scheduleExactNotification(hour: number, minute: number) {
 
     await Notifications.cancelAllScheduledNotificationsAsync();
 
+    await AsyncStorage.setItem('notificationHour', hour.toString());
+    await AsyncStorage.setItem('notificationMinute', minute.toString());
+
+    //console.log("Notification sauvegardé: ", hour, minute);
+
+    const now = new Date();
+    const notificationTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0);
+
+    if (notificationTime < now) {
+        notificationTime.setDate(notificationTime.getDate() + 1);
+    }
+
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "!",
-            body: "Mon test notification",
-            data: { repeat: true },
+            title: "Rappel",
+            body: "Faut réviser",
         },
         trigger: {
-            hour: 10,
-            minute: 0,
-            repeats: true,
-        } as any,
+            type: 'date',
+            date: notificationTime
+        } as Notifications.DateTriggerInput
     });
+
+    //console.log("Notification prévu pour:", notificationTime.toString());
 }
 
 export async function registerForPushNotificationsAsync() {
