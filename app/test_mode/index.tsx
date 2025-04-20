@@ -1,15 +1,15 @@
 import SurveyViewApp from "@/components/SurveyView";
-import { FlashcardProvider } from "@/context/FlashcardContext";
+import { SurveyProvider } from "@/context/SurveyContext";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 export default function TestModeView() {
   return (
-    <FlashcardProvider>
+    <SurveyProvider>
     <ScrollView contentContainerStyle={styles.container}>
       <SurveyViewApp/>
     </ScrollView>
-  </FlashcardProvider>
+  </SurveyProvider>
   );
 }
 
