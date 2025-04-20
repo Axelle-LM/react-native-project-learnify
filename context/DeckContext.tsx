@@ -7,8 +7,8 @@ export type DeckProps = {
 };
 
 const DeckContext = createContext<{
-    id: string, title: string, error: string | null, setId: (id: string) => void, setTitle: (title: string) => void, decks: DeckProps[], addDeck: (title: string) => void, cardToDeck: (deckId: string, cardId: string) => void
-}>({ id: " ", title: " ", error: null, setId: () => { }, setTitle: () => { }, decks: [], addDeck: () => { }, cardToDeck: () => { } })
+    id: string, title: string, error: string | null, setId: (id: string) => void, setTitle: (title: string) => void, decks: DeckProps[], addDeck: (title: string) => string, cardToDeck: (deckId: string, cardId: string) => void
+}>({ id: " ", title: " ", error: null, setId: () => { }, setTitle: () => { }, decks: [], addDeck: () => "", cardToDeck: () => { } })
 
 export const DeckProvider = ({ children }: PropsWithChildren) => {
     const [decks, setDecks] = useState<DeckProps[]>([]);
@@ -25,6 +25,7 @@ export const DeckProvider = ({ children }: PropsWithChildren) => {
         };
         setDecks((prev) => [newDeck, ...prev]);
         setTitle('');
+        return newDeck.id;
     };
 
     const cardToDeck = (deckId: string, cardId: string) => {
