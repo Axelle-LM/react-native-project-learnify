@@ -3,6 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Index from "./index";
 import TestModeView from "./test_mode";
 import LearningModeView from "./learning_mode";
+import App from "./swipe_test";
+import Example from "./qcm";
 
 const Tab = createBottomTabNavigator();
 

@@ -28,6 +28,21 @@ type SurveyStats = {
     wrongAnswersPercent: number
 };
 
+// Types spécial pour Mistral AI
+
+type Message = {
+    role: string;
+    content: string;
+};
+
+type ChatChoice = {
+    message: Message;
+};
+
+type ChatResponse = {
+    choices: ChatChoice[];
+};
+
 const SurveyCard = ({ 
     question, 
     answers, 
@@ -94,28 +109,26 @@ const SurveyStatsView = ({ questionTotal, rightAnswersCount, wrongAnswersCount, 
 
 const question1: FlashcardProps = {
     id: "1",
-    question: "question 1",
-    answer: "first_answer",
+    question: "Quel est la capitale de la France ?",
+    answer: "Paris",
 };
 
 const question2: FlashcardProps = {
     id: "2",
-    question: "question 2",
-    answer: "second_answer",
+    question: "Qui était Louis XIV ?",
+    answer: "Un roi",
 };
 
 const question3: FlashcardProps = {
     id: "3",
-    question: "question 3",
-    answer: "third_answer",
+    question: "C'est quoi l'ONU ?",
+    answer: "Organisation des Nation Unies",
 };
 
 const SurveyViewApp = () => {
     const [flashcards, setFlashcards] = useState<FlashcardProps[]>([])
     const [surveyContent, setSurveyContent] = useState<SurveyCardProps[]>([])
     const [selectedAnswers, setSelectedAnswers] = useState<SurveyAnswer[]>([])
-    const [rightAnswersPercent, setRightAnswersPercent] = useState<number>(0)
-    const [wrongAnswersPercent, setWrongAnswersPercent] = useState<number>(0)
 
     const [rightAnswers, setRightAnswers] = useState<SurveyAnswer[]>([])
     const [wrongAnswers, setWrongAnswers] = useState<SurveyAnswer[]>([])
@@ -130,6 +143,43 @@ const SurveyViewApp = () => {
         return randomString;
     }
 
+    // // nous vous invitons à décommenter ce bout de code après une utilisation de requête
+// const apiKey = "kiB9uh5VjZadAWajt9AVcVjSlzEeatk6";
+
+// const client = new Mistral({ apiKey: apiKey });
+
+
+async function getWrongAnswer(question: string): Promise<string | null> {
+
+    try {
+        const response = await fetch('https://chatgpt-ai-assistant.p.rapidapi.com/', 
+            {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': '5279274116mshfb09f8d31d5c9e4p18d144jsn5da42cdeb7c7',
+                    'x-rapidapi-host': 'chatgpt-ai-assistant.p.rapidapi.com',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: 'o1-mini-2024-09-12',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: `Peux-tu me donner une mauvaise réponse très courte et assez difficile pour trouver la bonne réponse pour cette question sans phrase d'introduction : ${question}`
+                        }
+                    ]
+                })
+            }
+        );
+	    const result = await response.json();
+        return result.choices[0].message.content
+
+    } catch (error) {
+        console.error("Erreur lors de l'appel à l'API :", error);
+        return null;
+    }
+}
+
     const getFlashCards = () => {
         setFlashcards([question1, question2, question3]);
         if (!flashcards) return;
@@ -138,8 +188,34 @@ const SurveyViewApp = () => {
             question: flashcard.question,
             answers: [
                 { value: 1, title: flashcard.answer, wrong: false, right: true },
-                { value: 2, title: generateRandomString(5), wrong: true, right: false },
-                { value: 3, title: generateRandomString(5), wrong: true, right: false },
+                { 
+                    value: 2, 
+                    title: getWrongAnswer(flashcard.question).then((wrongAnswer) => {
+                        return wrongAnswer
+                    }),
+                    wrong: true, 
+                    right: false
+                },
+                {
+                    value: 3, 
+                    title: getWrongAnswer(flashcard.question).then((wrongAnswer) => {
+                        return wrongAnswer
+                    }),
+                    wrong: true,
+                    right: false 
+                },
+                // { 
+                //     value: 2, 
+                //     title: generateRandomString(5),
+                //     wrong: true, 
+                //     right: false
+                // },
+                // {
+                //     value: 3, 
+                //     title: generateRandomString(5),
+                //     wrong: true,
+                //     right: false 
+                // },
             ],
         }));
         setSurveyContent(currentFlashCards);
@@ -168,30 +244,24 @@ const SurveyViewApp = () => {
 
             }
 
-            // Mise à jour des pourcentages
-        const totalQuestions = surveyContent.length
-        const rightPercent = (rightAnswers.length / totalQuestions) * 100
-        const wrongPercent = (wrongAnswers.length / totalQuestions) * 100
-
-        setRightAnswersPercent(rightPercent);
-        setWrongAnswersPercent(wrongPercent);
-
         });
         
     };
 
+    const rightPercent = (rightAnswers.length * 100) / surveyContent.length
+    const wrongPercent = (wrongAnswers.length * 100) / surveyContent.length
+
     console.log("Réponses sélectionnés", selectedAnswers)
     console.log(`Nombres de bonnes réponses: ${rightAnswers.length}`)
     console.log(`Tableau des bonnes réponses: ${rightAnswers}`)
+    console.log(`Pourcentage des bonnes réponses: ${rightPercent}%`)
     console.log(`Nombres de mauvaises réponses: ${wrongAnswers.length}`)
     console.log(`Tableau des mauvaises réponses: ${wrongAnswers}`)
+    console.log(`Pourcentage des mauvaises réponses: ${wrongPercent}%`)
     
     useEffect(() => {
         getFlashCards()
     }, [])
-
-    console.log("Pourcentage bonnes réponses :", `${rightAnswersPercent}%`)
-    console.log("Pourcentage mauvaises réponses :", `${wrongAnswersPercent}%`)
 
     return (
         <>
@@ -202,7 +272,7 @@ const SurveyViewApp = () => {
             )}
             />
             <Button title="Envoyer" onPress={() => getStats(selectedAnswers)} color="#ff4d4d" />
-            <SurveyStatsView questionTotal={surveyContent.length} wrongAnswersCount={wrongAnswers.length} wrongAnswersPercent={wrongAnswersPercent === 0 ? 0 : wrongAnswersPercent} rightAnswersCount={rightAnswers.length} rightAnswersPercent={rightAnswersPercent === 0 ? 0 : rightAnswersPercent}/>
+            <SurveyStatsView questionTotal={surveyContent.length} wrongAnswersCount={wrongAnswers.length} wrongAnswersPercent={wrongPercent === 0 ? 0 : wrongPercent} rightAnswersCount={rightAnswers.length} rightAnswersPercent={rightPercent === 0 ? 0 : rightPercent}/>
         </>
     );
 };
@@ -217,6 +287,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         borderRadius: 8,
         overflow: "hidden",
+        maxWidth: 500
     },
     question: {
         fontSize: 16,
