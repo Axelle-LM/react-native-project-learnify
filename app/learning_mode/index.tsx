@@ -1,4 +1,5 @@
-import SwipeView from "@/components/SwipeView";
+import LearningSWipeFlip from "@/components/LearningSwipeFlip";
+import SwipeView from "@/components/LearningSwipeFlip";
 import { FlashcardProvider } from "@/context/FlashcardContext";
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
@@ -6,9 +7,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 export default function LearningModeView() {
   return (
     <FlashcardProvider>
-      <ScrollView contentContainerStyle={styles.container} decelerationRate="fast" horizontal>
-        <SwipeView />
-      </ScrollView>
+      <LearningSWipeFlip/>
     </FlashcardProvider>
   );
 }
