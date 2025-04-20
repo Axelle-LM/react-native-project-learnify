@@ -202,7 +202,7 @@ const SurveyViewApp = () => {
             )}
             />
             <Button title="Envoyer" onPress={() => getStats(selectedAnswers)} color="#ff4d4d" />
-            <SurveyStatsView questionTotal={surveyContent.length} wrongAnswersCount={wrongAnswers.length} wrongAnswersPercent={wrongAnswersPercent} rightAnswersCount={rightAnswers.length} rightAnswersPercent={rightAnswersPercent}/>
+            <SurveyStatsView questionTotal={surveyContent.length} wrongAnswersCount={wrongAnswers.length} wrongAnswersPercent={wrongAnswersPercent === 0 ? 0 : wrongAnswersPercent} rightAnswersCount={rightAnswers.length} rightAnswersPercent={rightAnswersPercent === 0 ? 0 : rightAnswersPercent}/>
         </>
     );
 };
