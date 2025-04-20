@@ -8,8 +8,8 @@ export type FlashcardProps = {
 };
 
 const FlashcardContext = createContext<{
-    id: string, question: string, answer: string, error: string | null, setId: (id: string) => void, setQuestion: (q: string) => void, setAnswer: (a: string) => void, addFlashcard: (question: string, answer: string) => void, deleteFlashcard: (id: string) => void, editCard: (id: string, question: string, answer: string) => void, flashcards: FlashcardProps[]
-}>({ id: " ", question: " ", answer: " ", error: null, setId: () => { }, setQuestion: () => { }, setAnswer: () => { }, addFlashcard: () => { }, deleteFlashcard: () => { }, editCard: () => { }, flashcards: [] })
+    id: string, question: string, answer: string, error: string | null, setId: (id: string) => void, setQuestion: (q: string) => void, setAnswer: (a: string) => void, addFlashcard: (question: string, answer: string) => string, deleteFlashcard: (id: string) => void, editCard: (id: string, question: string, answer: string) => void, flashcards: FlashcardProps[]
+}>({ id: " ", question: " ", answer: " ", error: null, setId: () => { }, setQuestion: () => { }, setAnswer: () => { }, addFlashcard: () => "", deleteFlashcard: () => { }, editCard: () => { }, flashcards: [] })
 
 export const FlashcardProvider = ({ children }: PropsWithChildren) => {
     const [flashcards, setFlashcards] = useState<FlashcardProps[]>([]);
@@ -20,9 +20,9 @@ export const FlashcardProvider = ({ children }: PropsWithChildren) => {
     const [error, setError] = useState<string | null>(null);
 
     const addFlashcard = (question: string, answer: string) => {
-        if (!question || !answer) return;
+        if (!question || !answer) return "";
         const newCard: FlashcardProps = {
-            id: Date.now().toString(),
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
             question,
             answer,
         };
@@ -30,6 +30,7 @@ export const FlashcardProvider = ({ children }: PropsWithChildren) => {
         setQuestion('');
         setAnswer('');
         setError(null);
+        return newCard.id;
     };
 
     const deleteFlashcard = (id: string) => {
@@ -130,7 +131,7 @@ const FlashcardApp = () => {
                                 <Text style={styles.question}>Question : {item.question}</Text>
                                 <Text style={styles.answer}>Réponse : {item.answer}</Text>
                                 <Button title="Supprimer" onPress={() => deleteFlashcard(item.id)} color="#ff4d4d" />
-                                <Button title="Modifier" onPress={() => editCard(item)} color="green" />
+                                <Button title="Modifier" onPress={() => editCard(item.id, item.question, item.answer)} color="green" />
                             </View>
                         )}
                     </View>
