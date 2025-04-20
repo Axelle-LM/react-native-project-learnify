@@ -49,17 +49,17 @@ const DeckImport = () => {
                 return;
             }
 
-            const newDeckId = Date.now().toString();
-            console.log('Création du deck avec ID:', newDeckId);
-            addDeck(deckData.title);
+            // Créer le deck et récupérer son ID
+            const deckId = addDeck(deckData.title);
+            console.log('Deck créé avec ID:', deckId);
 
             for (const card of deckData.cards) {
                 if (card.question && card.answer) {
                     console.log('Ajout de la carte:', card);
-                    const newCardId = addFlashcard(card.question, card.answer); //crée carte avec id
+                    const newCardId = addFlashcard(card.question, card.answer);
                     if (newCardId) {
                         console.log('Carte créée avec ID:', newCardId);
-                        cardToDeck(newDeckId, newCardId); //mettre carte dans deck
+                        cardToDeck(deckId, newCardId);
                         console.log('Carte associée au deck');
                     }
                 }
