@@ -85,7 +85,10 @@ const DeckOfCard = ({ deck }: { deck: DeckProps }) => {
                 style={styles.deckButton}
                 onPress={() => setShowCards(!showCards)}
             >
-                <Text style={styles.deckTitle}>{deck.title}</Text>
+                <View style={styles.deckHeader}>
+                    <Text style={styles.deckTitle}>{deck.title}</Text>
+                    <Text style={styles.cardCount}>{deckCards.length} cartes</Text>
+                </View>
             </TouchableOpacity>
 
             {showCards && (
@@ -117,52 +120,79 @@ const DeckOfCard = ({ deck }: { deck: DeckProps }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
+        marginBottom: 15,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
     },
     deckButton: {
         width: '100%',
-        padding: 10,
+        padding: 15,
+    },
+    deckHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     deckTitle: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
         color: '#333',
     },
+    cardCount: {
+        fontSize: 14,
+        color: '#666',
+        backgroundColor: '#f0f0f0',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
     cardsContainer: {
-        width: '100%',
-        marginTop: 8,
+        padding: 15,
+        borderTopWidth: 1,
+        borderTopColor: '#f0f0f0',
     },
     cardItem: {
-        padding: 8,
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
+        padding: 12,
+        marginBottom: 10,
+        backgroundColor: '#f8f8f8',
+        borderRadius: 8,
     },
     cardQuestion: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '500',
+        color: '#333',
+        marginBottom: 5,
     },
     cardAnswer: {
         fontSize: 14,
         color: '#666',
-        marginTop: 2,
     },
     emptyText: {
         textAlign: 'center',
         color: '#666',
         fontStyle: 'italic',
+        padding: 20,
     },
     exportButton: {
         backgroundColor: '#2196F3',
-        padding: 10,
-        borderRadius: 5,
-        marginTop: 10,
+        padding: 12,
+        borderRadius: 8,
+        marginTop: 15,
         alignItems: 'center',
     },
     exportButtonText: {
         color: 'white',
         fontWeight: 'bold',
+        fontSize: 16,
     },
 });
 
