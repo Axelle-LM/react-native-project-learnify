@@ -30,6 +30,7 @@ type SurveySession = {
 
 const SurveyViewApp = () => {
 
+    // En guise d'exemple flashcard a été ajouté avec les autres éléments lié à cette view mais l'idée était d'utiliser flashcard de useFlashCards() pour le mode apprentissage avec toutes les flashcards
     let {deck, surveyContent, selectAnswer, getFlashCards, selectedAnswers, getStats, syncCurrentSession, rightAnswers, rightPercent, wrongAnswers, wrongPercent, lastSession, lastResult } = useSurvey()
 
     useEffect(() => {
