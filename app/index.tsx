@@ -7,7 +7,6 @@ import { DeckProvider } from "@/context/DeckContext";
 import DeckCreate from "@/components/DeckCreate";
 import DeckList from "@/components/DeckList";
 import NotificationPicker from "@/components/NotificationPicker";
-import DeckImport from "@/components/DeckImport";
 
 export default function Index() {
   return (
@@ -15,7 +14,6 @@ export default function Index() {
       <FlashcardProvider>
         <ScrollView contentContainerStyle={styles.container}>
           <NotificationPicker />
-          <DeckImport />
           <DeckCreate />
           <DeckList />
           <FlashcardForm />
